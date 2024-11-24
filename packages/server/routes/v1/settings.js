@@ -1,12 +1,11 @@
 // modules
-const path = require("path");
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
-
+const storageUtils = require("../../utils/storage");
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.resolve(__dirname, "../../../content/images"));
+    cb(null, storageUtils.getStoragePathFor("content/images"));
   },
   filename: (req, file, cb) => {
     const fileExtension =
@@ -14,11 +13,11 @@ const storage = multer.diskStorage({
     const fileName = Date.now().toString(32);
 
     cb(null, `${fileName}.${fileExtension}`);
-  },
+  }
 });
 
 const upload = multer({
-  storage,
+  storage
 });
 
 // controller
@@ -33,7 +32,7 @@ router.post(
   "/settings/update-logo",
   middlewares.apiAuth,
   upload.single("logo", 1),
-  settings.updateLogo,
+  settings.updateLogo
 );
 router.get("/settings/labs", settings.getLabs);
 router.patch("/settings/labs", middlewares.apiAuth, settings.updateLabs);

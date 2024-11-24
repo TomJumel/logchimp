@@ -24,6 +24,10 @@ router.get("/api", (req, res) => {
   res.send("👍");
 });
 
+router.get("/api/ping", (req,res)=>{
+  res.send("pong")
+})
+
 // v1 APIs
 router.use(v1);
 

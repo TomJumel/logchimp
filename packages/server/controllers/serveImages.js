@@ -1,6 +1,7 @@
 // modules
 const fs = require("fs");
 const path = require("path");
+const storageUtils = require("../utils/storage");
 
 /**
  * Following image formats are allowed (they're case sensitive):
@@ -16,9 +17,9 @@ const serveImages = (req, res) => {
   if (filterImagePath === null) {
     return res.sendStatus(404);
   }
-
+  const basePath = storageUtils.getStoragePathFor("content/images");
   fs.readFile(
-    path.join(__dirname, "../../../content/images", filterImagePath[0]),
+    path.join(basePath, filterImagePath[0]),
     (err, data) => {
       if (err) {
         res.sendStatus(404);

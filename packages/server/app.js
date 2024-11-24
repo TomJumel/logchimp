@@ -5,7 +5,8 @@ const routes = require("./routes");
 
 const app = express();
 app.disable("x-powered-by");
-
+//trust proxy
+app.set("trust proxy", true);
 // utils
 const logchimpConfig = require("./utils/logchimpConfig");
 const config = logchimpConfig();

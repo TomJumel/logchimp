@@ -32,6 +32,9 @@ database.migrate
       });
     }
   });
+//bootstrap file path
+const storageUtils = require("./utils/storage");
+storageUtils.ensureStorageReady();
 
 const config = logchimpConfig();
 

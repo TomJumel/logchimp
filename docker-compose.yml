@@ -1,0 +1,50 @@
+services:
+  api:
+    build:
+      target: api
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:3000/" ]
+    depends_on:
+      - db
+    volumes:
+      - content:/var/logchimp/
+    networks:
+      - db-network
+      - backend
+
+  web:
+    build:
+      target: webhost
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost/" ]
+    depends_on:
+      - api
+    networks:
+      - backend
+
+  db:
+    image: postgres:13
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+    networks:
+      - db-network
+
+volumes:
+  postgres_data:
+  content:
+
+networks:
+  db-network:
+  backend:
