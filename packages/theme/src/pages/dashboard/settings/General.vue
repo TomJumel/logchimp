@@ -46,6 +46,7 @@
             <label class="input-field-label" for="logo">Logo</label>
             <div class="dashboard-settings-logo-placeholder">
               <img
+                class="img-contain-logo"
                 :src="logo"
                 :alt="siteName.value"
                 @click="selectFileHandler"
@@ -96,8 +97,8 @@
 
 <script lang="ts">
 export default {
-  name: "DashboardSettings",
-}
+  name: "DashboardSettings"
+};
 </script>
 
 <script setup lang="ts">
@@ -105,8 +106,8 @@ import { computed, onMounted, reactive, ref } from "vue";
 import { useHead } from "@vueuse/head";
 
 // modules
-import { useSettingStore } from "../../../store/settings"
-import { useUserStore } from "../../../store/user"
+import { useSettingStore } from "../../../store/settings";
+import { useUserStore } from "../../../store/user";
 import {
   getSettings,
   updateSettings,
@@ -121,8 +122,9 @@ import ColorInput from "../../../components/ui/ColorInput.vue";
 import ToggleItem from "../../../components/ui/input/ToggleItem.vue";
 import Breadcrumbs from "../../../components/Breadcrumbs.vue";
 
-const { update } = useSettingStore()
-const { permissions } = useUserStore()
+const { update } = useSettingStore();
+const { permissions } = useUserStore();
+const fileSelector = ref<HTMLInputElement|null>(null);
 
 const siteName = reactive({
   value: "",
@@ -130,16 +132,16 @@ const siteName = reactive({
     show: false,
     message: ""
   }
-})
-const logo = ref("")
-const description = reactive ({
+});
+const logo = ref("");
+const description = reactive({
   value: "",
   error: {
     show: false,
     message: ""
   }
-})
-const allowSignup = ref(false)
+});
+const allowSignup = ref(false);
 const accentColor = reactive({
   value: "484d7c",
   error: {
@@ -154,13 +156,13 @@ const googleAnalyticsId = reactive({
     message: ""
   }
 });
-const developer_mode = ref(false)
-const updateSettingsButtonLoading = ref(false)
+const developer_mode = ref(false);
+const updateSettingsButtonLoading = ref(false);
 
-const updateSettingsPermissionDisabled = computed(() =>  {
+const updateSettingsPermissionDisabled = computed(() => {
   const checkPermission = permissions.includes("settings:update");
   return !checkPermission;
-})
+});
 
 function hideSiteNameError(event: FormFieldErrorType) {
   siteName.error = event;
@@ -179,7 +181,7 @@ function hideGoogleAnalyticsError(event: FormFieldErrorType) {
 }
 
 function selectFileHandler() {
-  // $refs.fileSelector.click();
+  fileSelector.value?.click();
 }
 
 async function uploadFile(event: any) {
@@ -192,7 +194,7 @@ async function uploadFile(event: any) {
     const response = await uploadSiteLogo(formData);
 
     logo.value = response.data.settings.logo;
-    update(response.data.settings.logo)
+    update(response.data.settings.logo);
   } catch (error) {
     console.error(error);
   }
@@ -260,10 +262,10 @@ onMounted(() => getSettingsHandler());
 
 useHead({
   title: "General • Settings • Dashboard"
-})
+});
 </script>
 
-<style lang='sass'>
+<style lang="sass">
 .dashboard-settings-logo
   margin-bottom: 1rem
   display: flex
@@ -277,7 +279,10 @@ useHead({
   border-radius: 3rem
   cursor: pointer
   user-select: none
+  padding: .5rem
 
-  img
-    width: 100%
+.img-contain-logo
+  width: 100%
+  aspect-ratio: 1
+
 </style>
